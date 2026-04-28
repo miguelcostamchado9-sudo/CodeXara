@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+<meta charset="UTF-8">
+<title>Usuários</title>
+
+<style>
+body {
+    font-family: Arial;
+    background: #111;
+    color: white;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+}
+
+/* 🔴 botão admin pequeno */
+.admin-btn {
+    position: fixed;
+    top: 10px;
+    right: 10px;
+    font-size: 12px;
+    padding: 5px 8px;
+    background: red;
+    border: none;
+    color: white;
+    cursor: pointer;
+    border-radius: 5px;
+}
+</style>
+</head>
+
+<body>
+
+<button class="admin-btn" onclick="entrarAdmin()">Admin</button>
+
+<h2>Página de Usuários (vazia) <br>
+    Aviso: Esta página é apenas um teste.<br>
+    - O painel admin é acessível apenas com a senha correta. <br>
+    <small>Caso consiga invadir, por favor, poste e me marque <br> e dê dicas (caso tenha) :3 </small>
+</h2>
+
+
+<script>
+function entrarAdmin() {
+    let senha = prompt("Senha admin:");
+
+    if (senha === "1976") {
+        window.location.href = "admin.html";
+    } else {
+        alert("Senha incorreta!");
+    }
+}
+</script>
+
+</body>
+</html>

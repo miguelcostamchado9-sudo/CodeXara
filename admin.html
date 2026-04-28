@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+<meta charset="UTF-8">
+<title>Admin</title>
+
+<style>
+body {
+    font-family: Arial;
+    background: #111;
+    color: white;
+    padding: 20px;
+}
+
+.user {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background: #222;
+    padding: 8px;
+    margin: 5px 0;
+    border-radius: 5px;
+}
+
+.delete-x {
+    background: red;
+    color: white;
+    border: none;
+    padding: 5px 8px;
+    cursor: pointer;
+    border-radius: 3px;
+    font-size: 12px;
+}
+
+button.main {
+    padding: 10px;
+    margin: 10px 5px;
+    cursor: pointer;
+    border: none;
+    border-radius: 5px;
+}
+
+.clear-btn {
+    background: darkred;
+    color: white;
+}
+
+.logout-btn {
+    background: gray;
+    color: white;
+}
+</style>
+</head>
+
+<body>
+
+<h1>Painel Admin</h1>
+
+<h3>Lista de Usuários:</h3>
+<div id="lista"></div>
+
+<button class="main clear-btn" onclick="limparUsuarios()">Limpar todos</button>
+<button class="main logout-btn" onclick="sair()">Sair</button>
+
+<script>
+
+const MASTER_KEY = "197659ma";
+
+// 📋 carregar usuários
+function carregar() {
+    let usuarios = JSON.parse(localStorage.getItem("usuarios")) || [];
+
+    let lista = document.getElementById("lista");
+    lista.innerHTML = "";
+
+    if (usuarios.length === 0) {
+        lista.innerHTML = "<p>Nenhum usuário cadastrado.</p>";
+        return;
+    }
+
+    usuarios.forEach((u, index) => {
+        let div = document.createElement("div");
+        div.className = "user";
+
+        div.innerHTML = `
+            <span>👤 ${u.nome} - ${u.email}</span>
+            <button class="delete-x" onclick="deletarUsuario(${index})">X</button>
+        `;
+
+        lista.appendChild(div);
+    });
+}
+
+carregar();
+
+// ❌ deletar usuário individual
+function deletarUsuario(index) {
+    let chave = prompt("Digite a chave mestre:");
+
+    if (chave !== MASTER_KEY) {
+        alert("Chave incorreta!");
+        return;
+    }
+
+    let confirmar = confirm("Deseja realmente apagar este usuário?");
+
+    if (!confirmar) return;
+
+    let usuarios = JSON.parse(localStorage.getItem("usuarios")) || [];
+
+    usuarios.splice(index, 1);
+
+    localStorage.setItem("usuarios", JSON.stringify(usuarios));
+
+    carregar();
+}
+
+// 🧹 limpar todos
+function limparUsuarios() {
+    let chave = prompt("Digite a chave mestre:");
+
+    if (chave !== MASTER_KEY) {
+        alert("Chave incorreta!");
+        return;
+    }
+
+    let confirmar = confirm("Apagar TODOS os usuários?");
+
+    if (!confirmar) return;
+
+    localStorage.removeItem("usuarios");
+
+    carregar();
+}
+
+// 🚪 sair
+function sair() {
+    window.location.href = "usuarios.html";
+}
+
+</script>
+
+</body>
+</html>

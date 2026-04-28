@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <title>CodeXara</title>
+
+    <!-- 🔥 ÍCONE DO SITE -->
+    <link rel="icon" href="icon.png" type="image/png">
+</head>
+
+<style>
+body {
+    font-family: Arial;
+    background: #111;
+    color: white;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+}
+
+.box {
+    background: #222;
+    padding: 20px;
+    border-radius: 10px;
+    width: 300px;
+}
+
+input {
+    width: 100%;
+    padding: 10px;
+    margin: 5px 0;
+}
+
+button {
+    width: 100%;
+    padding: 10px;
+    background: green;
+    border: none;
+    color: white;
+    cursor: pointer;
+}
+</style>
+
+<body>
+
+<div class="box">
+    <h2>Login</h2>
+
+    <input type="text" id="nome" placeholder="Nome">
+    <input type="text" id="email" placeholder="Email">
+    <input type="password" id="senha" placeholder="Senha">
+
+    <button onclick="login()">Entrar</button>
+</div>
+
+<script>
+function validarEmail(email) {
+    // 🔥 valida estrutura real de email
+    let regex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    return regex.test(email);
+}
+
+function login() {
+    let nome = document.getElementById("nome").value.trim();
+    let email = document.getElementById("email").value.trim();
+    let senha = document.getElementById("senha").value;
+
+    if (!nome || !email || !senha) {
+        alert("Preencha todos os campos!");
+        return;
+    }
+
+    if (nome.length < 3) {
+        alert("Nome precisa ter pelo menos 3 letras!");
+        return;
+    }
+
+    // 🔴 AQUI está a correção principal
+    if (!validarEmail(email)) {
+        alert("Arrume o Email!");
+        return;
+    }
+
+    let usuarios = JSON.parse(localStorage.getItem("usuarios")) || [];
+
+    usuarios.push({ nome, email, senha });
+
+    localStorage.setItem("usuarios", JSON.stringify(usuarios));
+
+    window.location.href = "usuarios.html";
+}
+
+//Abaixo é o final.
+</script>
+
+</body>
+</html>

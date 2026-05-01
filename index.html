@@ -190,7 +190,20 @@ h2 {
 </div>
 
 <script>
-// =====================
+
+   const originalShowAlert = showAlert;
+
+showAlert = function(msg) {
+    console.trace("ALERTA CHAMADO AQUI 👇");
+    originalShowAlert(msg);
+}; 
+    
+    
+    
+    
+    
+    
+    // =====================
 // UTIL
 // =====================
 function getUsers() {

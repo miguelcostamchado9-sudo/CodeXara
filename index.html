@@ -1,97 +1,293 @@
 <!DOCTYPE html>
 <html lang="pt-br">
 <head>
-    <meta charset="UTF-8">
-    <title>CodeXara</title>
-
-    <!-- 🔥 ÍCONE DO SITE -->
-    <link rel="icon" href="icon.png" type="image/png">
-</head>
+<meta charset="UTF-8">
+<title>Auth</title>
 
 <style>
 body {
-    font-family: Arial;
-    background: #111;
-    color: white;
+    margin: 0;
+    height: 100vh;
     display: flex;
     justify-content: center;
     align-items: center;
-    height: 100vh;
+    font-family: Arial;
+
+    background: linear-gradient(135deg, #e9eef5, #cfd9e6);
 }
 
-.box {
-    background: #222;
-    padding: 20px;
-    border-radius: 10px;
-    width: 300px;
+body.dark {
+    background: linear-gradient(135deg, #0f1115, #1a1d25);
+    color: white;
 }
 
+.container {
+    width: 340px;
+    padding: 25px;
+    border-radius: 18px;
+
+    background: rgba(255,255,255,0.9);
+    box-shadow: 0 10px 30px rgba(0,0,0,0.15);
+    backdrop-filter: blur(10px);
+
+    position: relative;
+}
+
+body.dark .container {
+    background: rgba(30,34,45,0.9);
+}
+
+/* inputs */
 input {
     width: 100%;
-    padding: 10px;
-    margin: 5px 0;
+    padding: 12px;
+    margin-top: 10px;
+
+    border-radius: 10px;
+    border: none;
+    outline: none;
+
+    background: #f1f3f6;
 }
 
+body.dark input {
+    background: #2a2f3a;
+    color: white;
+}
+
+/* botões */
 button {
     width: 100%;
-    padding: 10px;
-    background: green;
+    margin-top: 12px;
+    padding: 12px;
+
+    border-radius: 10px;
     border: none;
+
+    background: #4a6cf7;
     color: white;
+    font-weight: bold;
+
     cursor: pointer;
 }
+
+button:hover {
+    background: #3b5be0;
+}
+
+/* link inferior direito */
+.link {
+    position: absolute;
+    bottom: 10px;
+    right: 12px;
+
+    font-size: 12px;
+    color: #4a6cf7;
+    cursor: pointer;
+}
+
+/* esconder telas */
+.hidden {
+    display: none;
+}
+
+.custom-alert-overlay {
+    position: fixed;
+    inset: 0;
+    background: rgba(0,0,0,0.35);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 9999;
+}
+
+.custom-alert-box {
+    width: min(360px, 90%);
+    background: #111;
+    color: white;
+    border: 2px solid #7c4dff;
+    border-radius: 22px;
+    padding: 24px 20px 18px;
+    box-shadow: 0 20px 50px rgba(0,0,0,0.25);
+    position: relative;
+    text-align: center;
+}
+
+.custom-alert-close {
+    position: absolute;
+    top: 14px;
+    right: 14px;
+    width: 34px;
+    height: 34px;
+    border: none;
+    border-radius: 12px;
+    background: rgba(255,255,255,0.08);
+    color: white;
+    font-size: 20px;
+    cursor: pointer;
+}
+
+.custom-alert-message {
+    margin: 24px 0 20px;
+    font-size: 16px;
+    line-height: 1.6;
+}
+
+.custom-alert-ok {
+    width: 100%;
+    border: none;
+    border-radius: 14px;
+    padding: 12px 0;
+    background: #7c4dff;
+    color: white;
+    font-weight: bold;
+    cursor: pointer;
+}
+
+h2 {
+    text-align: center;
+}
 </style>
+</head>
 
-<body>
+<body onload="checkLoggedIn()">
 
-<div class="box">
-    <h2>Login</h2>
+<div class="container">
 
-    <input type="text" id="nome" placeholder="Nome">
-    <input type="text" id="email" placeholder="Email">
-    <input type="password" id="senha" placeholder="Senha">
+    <!-- ================= REGISTRO ================= -->
+    <div id="registerView">
+        <h2>Registro</h2>
 
-    <button onclick="login()">Entrar</button>
+        <input id="r_nome" placeholder="Nome">
+        <input id="r_email" placeholder="Email">
+        <input id="r_senha" type="password" placeholder="Senha">
+
+        <button onclick="register()">Criar conta</button>
+
+        <div class="link" onclick="showLogin()">Fazer login</div>
+    </div>
+
+    <!-- ================= LOGIN ================= -->
+    <div id="loginView" class="hidden">
+        <h2>Login</h2>
+
+        <input id="l_email" placeholder="Email">
+        <input id="l_senha" type="password" placeholder="Senha">
+
+        <button onclick="loginUser()">Entrar</button>
+
+        <div class="link" onclick="showRegister()">Criar conta</div>
+    </div>
+
+</div>
+
+<div id="customAlertOverlay" class="custom-alert-overlay hidden">
+    <div class="custom-alert-box">
+        <button class="custom-alert-close" onclick="closeAlert()">×</button>
+        <div id="alertMessage" class="custom-alert-message"></div>
+        <button class="custom-alert-ok" onclick="closeAlert()">OK</button>
+    </div>
 </div>
 
 <script>
-function validarEmail(email) {
-    // 🔥 valida estrutura real de email
-    let regex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-    return regex.test(email);
+// =====================
+// UTIL
+// =====================
+function getUsers() {
+    return JSON.parse(localStorage.getItem("usuarios")) || [];
 }
 
-function login() {
-    let nome = document.getElementById("nome").value.trim();
-    let email = document.getElementById("email").value.trim();
-    let senha = document.getElementById("senha").value;
+function saveUsers(users) {
+    localStorage.setItem("usuarios", JSON.stringify(users));
+}
+
+// =====================
+// VERIFICA LOGIN EXISTENTE
+// =====================
+function checkLoggedIn() {
+    if (localStorage.getItem("logado")) {
+        window.location.href = "usuarios.html";
+    }
+}
+
+// =====================
+// TROCA DE TELA
+// =====================
+function showLogin() {
+    document.getElementById("registerView").classList.add("hidden");
+    document.getElementById("loginView").classList.remove("hidden");
+}
+
+function showRegister() {
+    document.getElementById("loginView").classList.add("hidden");
+    document.getElementById("registerView").classList.remove("hidden");
+}
+
+function showAlert(message) {
+    document.getElementById("alertMessage").innerText = message;
+    document.getElementById("customAlertOverlay").classList.remove("hidden");
+}
+
+function closeAlert() {
+    document.getElementById("customAlertOverlay").classList.add("hidden");
+}
+
+// =====================
+// REGISTRO
+// =====================
+function register() {
+    let nome = document.getElementById("r_nome").value.trim();
+    let email = document.getElementById("r_email").value.trim();
+    let senha = document.getElementById("r_senha").value.trim();
 
     if (!nome || !email || !senha) {
-        alert("Preencha todos os campos!");
+        showAlert("Preencha todos os campos");
         return;
     }
 
-    if (nome.length < 3) {
-        alert("Nome precisa ter pelo menos 3 letras!");
+    let users = getUsers();
+
+    let exists = users.find(u => u.email === email);
+
+    if (exists) {
+        showAlert("Esse email já está registrado");
         return;
     }
 
-    // 🔴 AQUI está a correção principal
-    if (!validarEmail(email)) {
-        alert("Arrume o Email!");
+    users.push({
+        nome,
+        email,
+        senha,
+        role: "user",
+        createdAt: new Date().toISOString()
+    });
+
+    saveUsers(users);
+
+    showAlert("Conta criada com sucesso!");
+    showLogin();
+}
+
+// =====================
+// LOGIN
+// =====================
+function loginUser() {
+    let email = document.getElementById("l_email").value.trim();
+    let senha = document.getElementById("l_senha").value.trim();
+
+    let users = getUsers();
+
+    let user = users.find(u => u.email === email && u.senha === senha);
+
+    if (!user) {
+        showAlert("Login inválido");
         return;
     }
 
-    let usuarios = JSON.parse(localStorage.getItem("usuarios")) || [];
-
-    usuarios.push({ nome, email, senha });
-
-    localStorage.setItem("usuarios", JSON.stringify(usuarios));
+    localStorage.setItem("logado", JSON.stringify(user));
 
     window.location.href = "usuarios.html";
 }
-
-//Abaixo é o final.
 </script>
 
 </body>

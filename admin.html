@@ -1,8 +1,24 @@
-<!DOCTYPE html>
+
 <html lang="pt-br">
 <head>
 <meta charset="UTF-8">
 <title>Admin Panel - CodeXara</title>
+
+<script>
+let user = JSON.parse(localStorage.getItem("logado"));
+
+if (!user || user.role !== "admin") {
+    alert("Acesso negado");
+    window.location.href = "login.html";
+}
+</script>
+
+
+
+
+
+
+
 
 <style>
 body {

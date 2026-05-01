@@ -2,54 +2,313 @@
 <html lang="pt-br">
 <head>
 <meta charset="UTF-8">
-<title>Usuários</title>
+<title>CodeXara Dashboard</title>
 
 <style>
 body {
+    margin: 0;
     font-family: Arial;
-    background: #111;
+    transition: 0.4s;
+    background: #eef2f7;
+}
+
+body.dark {
+    background: #0f1115;
     color: white;
+}
+
+/* HEADER */
+.header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 15px 20px;
+    font-weight: bold;
+}
+
+.header > div {
+    display: flex;
+    gap: 10px;
+    align-items: center;
+}
+
+/* BOTÕES */
+button,
+.bank {
+    cursor: pointer;
+    border: none;
+    border-radius: 10px;
+    padding: 8px 12px;
+    transition: transform 0.2s ease, background 0.2s ease, box-shadow 0.2s ease;
+}
+
+.btn,
+.custom-alert-ok,
+.custom-alert-close {
+    background: #4a6cf7;
+    color: white;
+}
+
+.custom-alert-close {
+    background: rgba(255,255,255,0.08);
+    color: white;
+}
+
+button:hover,
+.bank:hover,
+.custom-alert-ok:hover,
+.custom-alert-close:hover {
+    transform: translateY(-1px) scale(1.02);
+    box-shadow: 0 8px 18px rgba(0, 0, 0, 0.15);
+}
+
+.btn:hover {
+    background: #3b5be0;
+}
+
+.bank:hover {
+    transform: scale(1.03);
+}
+
+/* ADMIN (direita) */
+.adminCorner {
+    position: fixed;
+    bottom: 10px;
+    right: 15px; 
+    background: black;
+    color: purple;
+    padding: 10px 10px;
+    border-radius: 2000px;
+    cursor: pointer;
+    z-index: 100;
+    transition: 0.2s ease;
+}
+
+.adminCorner:hover {
+    background: #1a1a1a;
+    box-shadow: 0 6px 21px rgba(119, 0, 255, 0.25);
+    transform: translateY(-1px);
+}
+
+.aboutCorner {
+    position: fixed;
+    bottom: 8px;
+    left: 10px; 
+    color: #4a6cf7;
+    padding: 4px 8px; /* menor */
+    font-size: 12px; /* menor texto */
+    border-radius: 20px; /* menos exagerado */
+    cursor: pointer;
+    z-index: 100;
+    transition: 0.2s ease;
+}
+
+.aboutCorner:hover {
+    transform: translateY(-1px);
+}
+
+/* BOX ADMIN */
+.adminBox {
+    display: none;
+    position: fixed;
+    top: 480px;
+    left: 15px;
+    background: white;
+    padding: 12px;
+    border-radius: 20px;
+}
+
+body.dark .adminBox {
+    background: #1f232d;
+    color: white;
+}
+
+/* CARD */
+.card {
+    width: 340px;
+    margin: 60px auto;
+    padding: 20px;
+    border-radius: 18px;
+    background: rgba(255,255,255,0.9);
+    box-shadow: 0 10px 25px rgba(0,0,0,0.15);
+    text-align: center;
+}
+
+body.dark .card {
+    background: rgba(30,34,45,0.9);
+}
+
+/* MINI BANK */
+.bank {
+    margin-top: 15px;
+    padding: 18px;
+    border-radius: 14px;
+    background: linear-gradient(135deg, #4a6cf7, #6a8cff);
+    color: white;
+}
+
+.title-effect {
+    display: inline-flex;
+}
+
+.title-effect span:hover {
+    transform: scale(1.4);
+    color: #7c4dff;
+}
+
+/* LISTA */
+.list {
+    display: none;
+    margin-top: 20px;
+    text-align: left;
+}
+
+.item {
+    padding: 10px;
+    margin-top: 8px;
+    border-radius: 10px;
+    background: #f1f3f6;
+}
+
+body.dark .item {
+    background: #2a2f3a;
+}
+
+/* ALERT */
+.custom-alert-overlay {
+    position: fixed;
+    inset: 0;
+    background: rgba(0,0,0,0.35);
     display: flex;
     justify-content: center;
     align-items: center;
-    height: 100vh;
 }
 
-/* 🔴 botão admin pequeno */
-.admin-btn {
-    position: fixed;
-    top: 10px;
-    right: 10px;
-    font-size: 12px;
-    padding: 5px 8px;
-    background: red;
-    border: none;
-    color: white;
-    cursor: pointer;
-    border-radius: 5px;
+.hidden {
+    display: none;
 }
 </style>
 </head>
 
-<body>
+<body onload="init()">
 
-<button class="admin-btn" onclick="entrarAdmin()">Admin</button>
+<!-- SOBRE -->
+<div class="aboutCorner" onclick="goAbout()">Sobre nós</div>
 
-<h2>Página de Usuários (vazia) <br>
-    Aviso: Esta página é apenas um teste.<br>
-    - O painel admin é acessível apenas com a senha correta. <br>
-    <small>Caso consiga invadir, por favor, poste e me marque <br> e dê dicas (caso tenha) :3 </small>
-</h2>
+<!-- ADMIN -->
+<div class="adminCorner" onclick="toggleAdmin()">Admin</div>
 
+<div class="adminBox" id="adminBox">
+    <input id="adminPass" type="password" placeholder="Senha admin">
+    <button class="btn" onclick="checkAdmin()">Entrar</button>
+</div>
+
+<!-- HEADER -->
+<div class="header">
+    <div id="userName">...</div>
+
+    <div>
+        <button class="btn" onclick="toggleTheme()">🌗 Tema</button>
+        <button class="btn" onclick="logout()">Sair</button>
+    </div>
+</div>
+
+<!-- CARD -->
+<div class="card">
+
+    <h2 class="title-effect">
+        <span>C</span><span>o</span><span>d</span><span>e</span>
+        <span>X</span><span>a</span><span>r</span><span>a</span>
+    </h2>
+
+    <p>Aplicativos</p>
+
+    <div id="miniBankButton" class="bank" onclick="toggleMiniBank()">
+        MiniBank
+    </div>
+
+    <div class="list" id="listBox">
+        <h3 id="title">Lista</h3>
+        <div id="users"></div>
+    </div>
+
+</div>
 
 <script>
-function entrarAdmin() {
-    let senha = prompt("Senha admin:");
+let miniBankOpen = false;
 
-    if (senha === "1976") {
+function init() {
+    let user = JSON.parse(localStorage.getItem("logado"));
+    if (!user || !user.nome) {
+        window.location.href = "login.html";
+        return;
+    }
+
+    document.getElementById("userName").innerText = "Olá, " + user.nome;
+    loadTheme();
+}
+
+function toggleTheme() {
+    document.body.classList.toggle("dark");
+    localStorage.setItem("tema", document.body.classList.contains("dark") ? "dark" : "light");
+}
+
+function loadTheme() {
+    if (localStorage.getItem("tema") === "dark") {
+        document.body.classList.add("dark");
+    }
+}
+
+function logout() {
+    localStorage.removeItem("logado");
+    window.location.href = "login.html";
+}
+
+function toggleMiniBank() {
+    let listBox = document.getElementById("listBox");
+
+    if (!miniBankOpen) {
+        miniBankOpen = true;
+        listBox.style.display = "block";
+        renderMiniBank();
+    } else {
+        miniBankOpen = false;
+        listBox.style.display = "none";
+    }
+}
+
+function renderMiniBank() {
+    let box = document.getElementById("users");
+    box.innerHTML = `
+        <div class="item">
+            <h3>MiniBank</h3>
+            <p>Bem-vindo ao MiniBank</p>
+            <p onclick="goRegister()" style="cursor:pointer;color:#4a6cf7;">
+                Cadastrar-se
+            </p>
+        </div>
+    `;
+}
+
+function goRegister() {
+    window.location.href = "MiniBank/nu.htm";
+}
+
+function goAbout() {
+    window.location.href = "sobre.html";
+}
+
+function toggleAdmin() {
+    let box = document.getElementById("adminBox");
+    box.style.display = box.style.display === "block" ? "none" : "block";
+}
+
+function checkAdmin() {
+    let pass = document.getElementById("adminPass").value;
+    if (pass === "1976") {
         window.location.href = "admin.html";
     } else {
-        alert("Senha incorreta!");
+        alert("Senha incorreta");
     }
 }
 </script>

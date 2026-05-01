@@ -2,142 +2,282 @@
 <html lang="pt-br">
 <head>
 <meta charset="UTF-8">
-<title>Admin</title>
+<title>Admin Panel - CodeXara</title>
 
 <style>
 body {
+    margin: 0;
     font-family: Arial;
-    background: #111;
-    color: white;
-    padding: 20px;
+    transition: 0.4s;
+
+    background: #e6e6eb;
+    min-height: 100vh;
+    padding: 25px;
+    box-sizing: border-box;
 }
 
+/* 🌑 DARK */
+body.dark {
+    background: #0f1115;
+}
+
+/* CONTAINER CENTRAL */
+.panel {
+    width: 420px;
+    max-width: calc(100% - 50px);
+    margin: 0 auto;
+    padding: 25px;
+    border-radius: 18px;
+
+    background: #f4f5f8;
+    box-shadow: 0 15px 40px rgba(0,0,0,0.2);
+
+    border: 2px solid #7c4dff;
+
+    transition: 0.4s;
+}
+
+body.dark .panel {
+    background: #1b1f2a;
+    box-shadow: 0 15px 50px rgba(0,0,0,0.6);
+}
+
+/* HEADER */
+.header {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 15px;
+}
+
+/* BOTÕES */
+button {
+    border: none;
+    padding: 8px 12px;
+    border-radius: 10px;
+    cursor: pointer;
+    transition: 0.3s;
+}
+
+.btn {
+    background: #7c4dff;
+    color: white;
+}
+
+.btn:hover {
+    background: #6a3ee6;
+}
+
+/* LISTA */
+.list {
+    margin-top: 15px;
+}
+
+/* CARD USUÁRIO */
 .user {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    background: #222;
-    padding: 8px;
-    margin: 5px 0;
-    border-radius: 5px;
+    gap: 12px;
+    padding: 14px;
+    margin-top: 12px;
+
+    border-radius: 16px;
+
+    background: #111;
+    border-left: 4px solid #7c4dff;
+    color: white;
+
+    box-shadow: 0 5px 15px rgba(0,0,0,0.18);
 }
 
-.delete-x {
-    background: red;
-    color: white;
+.user .info {
+    line-height: 1.4;
+}
+
+.removeButton {
     border: none;
-    padding: 5px 8px;
+    background: transparent;
+    color: #ff5f7a;
+    font-size: 18px;
+    font-weight: bold;
     cursor: pointer;
-    border-radius: 3px;
+    padding: 4px 8px;
+    border-radius: 8px;
+    transition: 0.2s;
+}
+
+.removeButton:hover {
+    background: rgba(255,95,122,0.18);
+}
+
+.meta {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+    gap: 8px;
+}
+
+.status {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    padding: 6px 10px;
+    border-radius: 999px;
     font-size: 12px;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    border: 1px solid transparent;
 }
 
-button.main {
-    padding: 10px;
-    margin: 10px 5px;
-    cursor: pointer;
-    border: none;
-    border-radius: 5px;
+.status.online {
+    color: #b4f0c9;
+    border-color: #6df7a4;
+    background: rgba(109,247,164,0.14);
 }
 
-.clear-btn {
-    background: darkred;
+.status.offline {
+    color: #f3c7ff;
+    border-color: #d48cff;
+    background: rgba(212,140,255,0.12);
+}
+
+body.dark .user {
+    background: #111;
     color: white;
 }
 
-.logout-btn {
-    background: gray;
-    color: white;
+/* TITULO */
+h2 {
+    margin: 0;
 }
 </style>
 </head>
 
-<body>
+<body onload="init()">
 
-<h1>Painel Admin</h1>
+<div class="panel">
 
-<h3>Lista de Usuários:</h3>
-<div id="lista"></div>
+    <div class="header">
+        <h2>Admin Panel</h2>
 
-<button class="main clear-btn" onclick="limparUsuarios()">Limpar todos</button>
-<button class="main logout-btn" onclick="sair()">Sair</button>
+        <div>
+            <button class="btn" onclick="toggleTheme()">🌗 Tema</button>
+            <button class="btn" onclick="returnToUsers()">Sair</button>
+        </div>
+    </div>
+
+    <h3>Usuários do sistema</h3>
+
+    <div class="list" id="list"></div>
+
+</div>
 
 <script>
+// =====================
+// INIT
+// =====================
+function init() {
+    loadTheme();
+    render();
+}
 
-const MASTER_KEY = "197659ma";
+// =====================
+// TEMA (CORRIGIDO)
+// =====================
+function toggleTheme() {
+    document.body.classList.toggle("dark");
 
-// 📋 carregar usuários
-function carregar() {
-    let usuarios = JSON.parse(localStorage.getItem("usuarios")) || [];
+    localStorage.setItem(
+        "tema",
+        document.body.classList.contains("dark") ? "dark" : "light"
+    );
+}
 
-    let lista = document.getElementById("lista");
-    lista.innerHTML = "";
+function loadTheme() {
+    if (localStorage.getItem("tema") === "dark") {
+        document.body.classList.add("dark");
+    }
+}
 
-    if (usuarios.length === 0) {
-        lista.innerHTML = "<p>Nenhum usuário cadastrado.</p>";
+// =====================
+// VOLTAR AO USUÁRIOS
+// =====================
+function returnToUsers() {
+    window.location.href = "usuarios.html?from=admin";
+}
+
+// =====================
+// RENDER USUÁRIOS (CORRIGIDO)
+// =====================
+function render() {
+    let users = JSON.parse(localStorage.getItem("usuarios")) || [];
+
+    let box = document.getElementById("list");
+    box.innerHTML = "";
+
+    if (users.length === 0) {
+        box.innerHTML = "<p>Nenhum usuário encontrado</p>";
         return;
     }
 
-    usuarios.forEach((u, index) => {
+    let currentUser = JSON.parse(localStorage.getItem("logado")) || {};
+
+    users.forEach((u, index) => {
         let div = document.createElement("div");
         div.className = "user";
 
+        let roleLabel = u.email === "Miguelcostamchado9@gmail.com" ? "Administrador" : (u.role || "user");
+        let createdAtRaw = u.createdAt || new Date().toISOString();
+
+        if (!u.createdAt) {
+            u.createdAt = createdAtRaw;
+            users[index] = u;
+            localStorage.setItem("usuarios", JSON.stringify(users));
+        }
+
+        let createdAt = new Date(createdAtRaw).toLocaleString("pt-BR", {
+            day: "2-digit",
+            month: "2-digit",
+            year: "2-digit",
+            hour: "2-digit",
+            minute: "2-digit"
+        });
+        let statusText = currentUser.email === u.email ? "Online" : "Offline";
+        let statusClass = currentUser.email === u.email ? "online" : "offline";
+
         div.innerHTML = `
-            <span>👤 ${u.nome} - ${u.email}</span>
-            <button class="delete-x" onclick="deletarUsuario(${index})">X</button>
+            <div class="info">
+                <b>${u.nome}</b><br>
+                ${createdAt ? `Criação: ${createdAt}<br>` : ""}
+                Role: ${roleLabel}
+            </div>
+            <div class="meta">
+                <span class="status ${statusClass}">${statusText}</span>
+                <button class="removeButton" onclick="removeUser(${index})">×</button>
+            </div>
         `;
 
-        lista.appendChild(div);
+        box.appendChild(div);
     });
 }
 
-carregar();
+function removeUser(index) {
+    let users = JSON.parse(localStorage.getItem("usuarios")) || [];
+    let user = users[index];
 
-// ❌ deletar usuário individual
-function deletarUsuario(index) {
-    let chave = prompt("Digite a chave mestre:");
-
-    if (chave !== MASTER_KEY) {
-        alert("Chave incorreta!");
+    if (!user) {
         return;
     }
 
-    let confirmar = confirm("Deseja realmente apagar este usuário?");
-
-    if (!confirmar) return;
-
-    let usuarios = JSON.parse(localStorage.getItem("usuarios")) || [];
-
-    usuarios.splice(index, 1);
-
-    localStorage.setItem("usuarios", JSON.stringify(usuarios));
-
-    carregar();
-}
-
-// 🧹 limpar todos
-function limparUsuarios() {
-    let chave = prompt("Digite a chave mestre:");
-
-    if (chave !== MASTER_KEY) {
-        alert("Chave incorreta!");
+    let confirmed = confirm(`Tem certeza que deseja remover ${user.nome}?`);
+    if (!confirmed) {
         return;
     }
 
-    let confirmar = confirm("Apagar TODOS os usuários?");
-
-    if (!confirmar) return;
-
-    localStorage.removeItem("usuarios");
-
-    carregar();
+    users.splice(index, 1);
+    localStorage.setItem("usuarios", JSON.stringify(users));
+    render();
 }
-
-// 🚪 sair
-function sair() {
-    window.location.href = "usuarios.html";
-}
-
 </script>
 
 </body>

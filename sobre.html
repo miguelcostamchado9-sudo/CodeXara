@@ -1,0 +1,301 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+<meta charset="UTF-8">
+<title>Sobre • CodeXara</title>
+
+<style>
+body {
+    margin: 0;
+    font-family: Arial;
+    background: #0f1115;
+    color: white;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+    text-align: center;
+    flex-direction: column;
+}
+
+.container {
+    max-width: 500px;
+    font-size: 12px;
+    cursor: default;
+}
+
+h1 {
+    color: #a78bfa;
+    transition: all 0.3s ease;
+
+    /* efeito neon base */
+    text-shadow:
+        0 0 20px #7246ec,
+        0 0 40px #4a00ff;
+} /*Já ajustado*/
+
+h1:hover {
+    transform: scale(1.05);
+
+    /* neon mais forte no hover */
+    text-shadow:
+        0 0 10px #8f77d9,
+        0 0 40px #7c4dff,
+        0 0 80px #4a00ff;
+} /*Já ajustado*/
+
+
+
+
+
+.container2 { 
+    font-size: 10px;
+    font-family: 'Trebuchet MS', 'Lucida Sans Unicode', 'Lucida Grande', 'Lucida Sans', Arial, sans-serif;
+}
+
+.container3 {
+    font-size: 8px;
+    font-family: 'Trebuchet MS', 'Lucida Sans Unicode', 'Lucida Grande', 'Lucida Sans', Arial, sans-serif;
+}
+
+.container4 {
+    font-size: 7px;
+    font-family: 'Trebuchet MS', 'Lucida Sans Unicode', 'Lucida Grande', 'Lucida Sans', Arial, sans-serif;
+    text-align: left;
+}
+
+.container5 {
+    font-size: 8px;
+   text-align: center;
+    margin-top: 20px;
+    cursor: default;
+}
+
+
+button {
+    margin-top: 20px;
+    padding: 10px 15px;
+    border: none;
+    border-radius: 10px;
+    background: #4a6cf7;
+    color: white;
+    cursor: pointer;
+}
+
+.Voltar { 
+    position: fixed;
+    bottom: 15px;
+    left: 50%;
+    transform: translateX(-50%);
+}
+
+.Voltar button {
+    background: #1e2f6f;
+    color: white;
+    border: none;
+    padding: 10px 20px;
+    border-radius: 20px;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.Voltar button:hover {
+    background: #2e4aad;
+    transform: scale(1.06);
+    box-shadow: 0 0 10px rgba(46, 74, 173, 0.6);
+}
+
+.glitch {
+    position: relative;
+    color: #7c4dff;
+    transition: all 0.3s ease;
+}
+
+/* leve deslocamento */
+.glitch::before {
+    transform: translate(1px, 0);
+}
+
+.glitch::after {
+    transform: translate(-1px, 0);
+}
+
+/* efeito só no hover */
+.glitch:hover::before {
+    animation: glitchSoft 0.4s infinite;
+}
+
+.glitch:hover::after {
+    animation: glitchSoft2 0.4s infinite;
+}
+
+/* animações bem leves */
+@keyframes glitchSoft {
+    0% { transform: translate(1px, 0); }
+    50% { transform: translate(2px, 1px); }
+    100% { transform: translate(1px, 0); }
+}
+
+@keyframes glitchSoft2 {
+    0% { transform: translate(-1px, 0); }
+    50% { transform: translate(-2px, -1px); }
+    100% { transform: translate(-1px, 0); }
+}
+
+.features {
+    margin-top: 20px;
+    text-align: left;
+    font-size: 6.5px;
+    font-family: 'Trebuchet MS', 'Lucida Sans Unicode', 'Lucida Grande', 'Lucida Sans', Arial, sans-serif;
+    color: Purple;
+}
+
+.encontra {
+    color: rgb(147, 146, 146);
+}
+.tecnologias {
+    color: #7c4dff;
+    margin-top: 10px;
+    text-align: center;
+
+    text-shadow:
+        0 0 5px rgba(124, 77, 255, 0.6),
+        0 0 10px rgba(124, 77, 255, 0.4);
+
+    
+
+    }
+
+   
+    /* estado inicial (invisível) */
+.github-container {
+    position: fixed;
+    top: 15px;
+    right: 15px;
+
+    opacity: 0;
+    transform: translateY(-20px);
+
+    animation: aparecerBtn 0.91s ease forwards;
+}
+
+/* animação */
+@keyframes aparecerBtn {
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+
+
+
+</style>
+</head>
+
+<body>
+
+<div class="container">
+    <h1 class="glitch" data-text="Sobre o CodeXara">Sobre o CodeXara</h1>
+
+    <p>
+        A Plataforma CodeXara é um projeto digital em desenvolvimento focado na criação de aplicações modernas, interativas e acessíveis. Seu objetivo é explorar soluções tecnológicas que unam design, funcionalidade e uma boa experiência para o usuário.
+      
+    </p>
+
+</div>
+    <div class = "container2">
+    <p>
+       Criada como um ambiente de aprendizado e evolução contínua, a CodeXara reúne diferentes ideias e sistemas em um só lugar, permitindo o desenvolvimento de funcionalidades como autenticação, interfaces dinâmicas e aplicações financeiras experimentais, como o MiniBank.
+    </p>
+
+
+    <div class = "container3">
+    <p> Mais do que apenas um sistema, a CodeXara representa uma iniciativa voltada ao crescimento técnico, à criatividade e à construção de produtos digitais com identidade própria.</p>
+        
+</div>
+
+<div class = "container4">
+<p> Este projeto segue em constante evolução, buscando aprimorar recursos, segurança e usabilidade, sempre com foco em oferecer uma experiência cada vez mais completa e moderna.</p>
+
+</div> 
+
+<div class="features">
+    <p><strong>O que você encontra na CodeXara:</strong></p>
+ 
+    
+    
+<div class = "encontra">
+
+    <ul>
+        <li>Sistemas com autenticação de usuários</li>
+        <li>Interfaces modernas e interativas</li>
+        <li>Projetos experimentais como o MiniBank</li>
+        <li>Foco em segurança e boas práticas</li>
+    </ul>
+
+    </div>
+    
+    <div class = "tecnologias">
+    
+    <p><strong>Tecnologias utilizadas:</strong> HTML, CSS, JavaScript e conceitos de banco de dados.</p>
+
+        </div>
+
+    </div>
+
+
+
+
+
+
+
+
+</div>
+
+   <div class = "container5">
+    <small>© CodeXara • 2026</small>
+
+
+   </div>
+
+<div class = "Voltar">
+
+<button onclick="voltar()">Voltar</button>
+</div>
+
+<div class="github-container">
+    <a href="https://github.com/miguelcostamchado9-sudo" target="_blank" class="github-btn">
+        <svg height="20" width="20" viewBox="0 0 16 16" fill="white">
+            <path d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 
+            6.53 5.47 7.59.4.07.55-.17.55-.38 
+            0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94
+            -.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52 
+            -.01-.53.63-.01 1.08.58 1.23.82.72 1.21 
+            1.87.87 2.33.66.07-.52.28-.87.51-1.07
+            -1.78-.2-3.64-.89-3.64-3.95 
+            0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 
+            0 0 .67-.21 2.2.82.64-.18 1.32-.27 
+            2-.27s1.36.09 2 .27c1.53-1.04 
+            2.2-.82 2.2-.82.44 1.1.16 1.92.08 
+            2.12.51.56.82 1.27.82 2.15 
+            0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 
+            1.48 0 1.07-.01 1.93-.01 2.2 
+            0 .21.15.46.55.38A8.013 8.013 0 
+            0 0 16 8c0-4.42-3.58-8-8-8z"/>
+        </svg>
+    </a>
+</div>
+
+
+
+
+
+<script>
+function voltar() {
+    window.history.back();
+}
+</script>
+
+</body>
+</html>
